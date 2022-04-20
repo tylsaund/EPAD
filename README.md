@@ -10,5 +10,5 @@ Scripts will run when data are organised into folders as follows:
 ## Import: 01_import.R
 Imports all .csv files into R environment. 
 
-## Cleaning scripts:
+## Cleaning scripts:
 Not all cleaning scripts will be necessary for all analyses. 
