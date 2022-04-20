@@ -5,6 +5,7 @@
 library(here) # path names
 library(tidyverse) # general data wrangling and visualisation
 library(fs) # file system operations
+library(janitor)
 
 # import =========
 
@@ -20,3 +21,22 @@ epad_data_list <- epad_csv_files %>%
     trim_ws = TRUE,
     name_repair = "unique"
   ))
+
+# clean ====================
+
+# remove the pathname, duplicate prefix, and filetype from the names of the list elements
+epad_data_names <- epad_data_list %>%
+  names() %>%
+  str_remove_all(., paste0(epad_data_path)) %>%
+  str_remove_all(., "/") %>%
+  str_remove(., ".csv") %>%
+  str_remove(., "v_imi_epadlcs_")
+
+# set the new names
+names(epad_data_list) <- epad_data_names
+
+# optional: check classes of patient_id (primary key to merge by) column_classes <- compare_df_cols(epad_data_list)
+
+# expand dataframe list to environment as individual dataframes
+list2env(epad_data_list, envir=.GlobalEnv)
+
