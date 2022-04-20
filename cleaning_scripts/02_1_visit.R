@@ -17,3 +17,6 @@ visits <- visits %>%
 # remove "days" from time variable 
 visits$time <- gsub(" days","", visits$time) %>%
   as.numeric()
+
+# save output =====
+write_csv(visits, here("data","interim","visits_time.csv"))
