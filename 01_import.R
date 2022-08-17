@@ -6,7 +6,7 @@ library(here) # path names
 library(tidyverse) # general data wrangling and visualisation
 library(fs) # file system operations
 library(janitor)
-
+library(purrr)
 # import =========
 
 ## specify path to look for data
@@ -34,6 +34,13 @@ epad_data_names <- epad_data_list %>%
 
 # set the new names
 names(epad_data_list) <- epad_data_names
+
+# change patient_id variable to character class across all dataframes
+patientid_class <- function(df){
+  within(df, patient_id <- as.character(patient_id))
+}
+
+epad_data_list<- lapply(epad_data_list, patientid_class)
 
 # optional: check classes of patient_id (primary key to merge by) column_classes <- compare_df_cols(epad_data_list)
 
