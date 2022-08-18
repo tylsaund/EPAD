@@ -87,3 +87,5 @@ epad_merged <- epad_merged %>%
                   "apoe_e4",
                   "abeta_status"), ~ factor(.)))
 
+
+write_rds(epad_merged, here("data", "processed", "epad_merged.RDS"))
