@@ -1,6 +1,7 @@
 # script purpose: 
-# converts classes
-# list them here
+# Create time and apoe variables
+# Combine original and re-calculated A-beta values
+
 
 # setup =========
 library(here)
