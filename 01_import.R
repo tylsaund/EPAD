@@ -1,5 +1,6 @@
 # script purpose:
 # - reads in all .csv files in a specified folder
+# Merge dataframes
 
 # setup ==========
 library(here) # path names
@@ -47,3 +48,4 @@ epad_data_list<- lapply(epad_data_list, patientid_class)
 # expand dataframe list to environment as individual dataframes
 list2env(epad_data_list, envir=.GlobalEnv)
 
+# Merge ==========
