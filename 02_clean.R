@@ -91,5 +91,7 @@ epad_merged <- epad_merged %>%
                   "apoe_e4",
                   "abeta_status"), ~ factor(.)))
 
+colnames(epad_merged)[colnames(epad_merged) == "physical activity"] <- "physical_activity"
+
 
 write_rds(epad_merged, here("data", "processed", "epad_merged.RDS"))
