@@ -77,7 +77,11 @@ df5 <- left_join(df4, unique(eligibility))
 df6 <- left_join(df5, unique(dementia_diag))
 df7 <- left_join(df6, unique(mmse))
 df8 <- left_join(df7, unique(rbans))
-epad_merged <- left_join(df8, unique(apoe))
+df9 <- left_join(df8, unique(hatice), by = c("patient_id", "visit"))
+df10 <- left_join(df9, unique(vital_signs))
+df11 <- left_join(df10, unique(gds))
+df12 <- left_join(df11, unique(life))
+epad_merged <- left_join(df12, unique(apoe))
 
 # Convert column classes =====
 epad_merged <- epad_merged %>%
