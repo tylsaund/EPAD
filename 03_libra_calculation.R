@@ -63,10 +63,37 @@ libra_data <- libra_data %>%
   ))
            
 #MEDAS diet score
-libra_data$lcs2_4[libra_data$lcs2_4 >=150] <- NA #scores over 150 are errors so recoded as NA
-libra_data <- libra_data %>%
-  mutate(libra_medas = )
+libra_data$lcs2_4[libra_data$lcs2_4 >=150] <- NA #scores over are errors so recoded as NA
+libra_data$lcs2_1[libra_data$lcs2_1 == "150"] <- NA
+libra_data$lcs2_1[libra_data$lcs2_1 == "300"] <- NA
+libra_data$lcs2_3[libra_data$lcs2_3 >= 150] <- NA
+libra_data[libra_data == ""] <- NA
 
-rule1 <- ifelse((LIBRA_Final$lcs2_2+LIBRA_Final$lcs2_4)<7, 1, 0) 
-table(is.na(rule1)) #32 missing
 
+medas <- libra_data
+
+medas <- medas %>%
+  mutate(meat_servings = ifelse((medas$lcs2_2+medas$lcs2_4 < 7), 1,0),
+         fish_servings = ifelse(medas$lcs2_1 >=3, 1, 0),
+         red_white_meat = ifelse((medas$lcs2_2+medas$lcs2_4) < medas$lcs2_3, 1, 0),
+         veg_sauces = ifelse(medas$lcs4 == "2 servings or more per day" | medas$lcs4 == "1 serving per day" | medas$lcs4 =="4-6 servings a week" | medas$lcs4 == "1-3 servings a week", 1, 0),
+         oil_type = ifelse(medas$lcs5 == "Mostly extra virgin olive oil"  | medas$lcs5 == "Mostly regular olive oil", 1, 0),
+         olive_oil = ifelse(medas$lcs6 == "4 tablespoons or more", 1, 0),
+         nuts_seeds = ifelse(medas$lcs7 == "1 serving per day" | medas$lcs7 == "2 servings or more per day" | medas$lcs7 == "3 servings a week" | medas$lcs7 =="4-6 servings a week", 1, 0),
+         legumes = ifelse(medas$lcs8 == "3 servings a week" | medas$lcs8 == "4-6 servings a week" | medas$lcs8 == "2 servings or more per day" | medas$lcs8 == "1 serving per day", 1, 0),
+         vegetable_serv = ifelse(medas$lcs9 == "2 servings per day" | medas$lcs9 ==  "3-4 servings per day" | medas$lcs9 == "5 servings per day or more", 1, 0),
+         fruit = ifelse(medas$lcs11 == "3 servings per day" | medas$lcs11 == "4 servings or more per day", 1, 0),
+         butter = ifelse(medas$lcs13 == "Less than 1 serving a week or none" | medas$lcs13 ==  "1-3 servings a week" | medas$lcs13 ==  "4-6 servings a week", 1, 0),
+         cake = ifelse(medas$lcs18 ==  "Less than 1 serving a week or none" | medas$lcs18 =="1 serving a week", 1 , 0 ),
+         fizzy_drink = ifelse((medas$lcs20_5+medas$lcs20_8) <1, 1, 0),
+         wine = ifelse(medas$lcs21 == "1-2" | medas$lcs21 == "3-4" | medas$lcs21 == "5-6 (or about 1 unit on most days or 1 bottle per week)" | medas$lcs21 == "7-14 (or 1-2 units per day)", 1, 0 )
+         ) %>%
+  mutate(medas_score  = meat_servings + fish_servings + red_white_meat + veg_sauces + oil_type + olive_oil + nuts_seeds + legumes + vegetable_serv + fruit + butter + cake + fizzy_drink + wine) %>%
+  mutate(libra_diet = ifelse(medas_score > 6, -1.7, 0))
+
+medas <- medas[c("patient_id", "medas_score", "libra_diet")]
+libra_data <- merge(libra_data, medas, by = "patient_id")
+
+#Calculate total libra score
+libra_data <- libra_data %>% 
+  mutate(total_libra = libra_cardiac + libra_diabetes + libra_hyperten + libra_alcohol + libra_renal + libra_smoking + libra_exercise + libra_depression + libra_cholesterol + libra_obesity + libra_diet)
