@@ -97,3 +97,5 @@ libra_data <- merge(libra_data, medas, by = "patient_id")
 #Calculate total libra score
 libra_data <- libra_data %>% 
   mutate(total_libra = libra_cardiac + libra_diabetes + libra_hyperten + libra_alcohol + libra_renal + libra_smoking + libra_exercise + libra_depression + libra_cholesterol + libra_obesity + libra_diet)
+
+# Save dataframe 
